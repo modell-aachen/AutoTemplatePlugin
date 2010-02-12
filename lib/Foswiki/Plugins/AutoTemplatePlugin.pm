@@ -18,7 +18,7 @@ use vars qw( $VERSION $RELEASE $SHORTDESCRIPTION
 );
 
 $VERSION = '$Rev: 5221 $';
-$RELEASE = '1.0';
+$RELEASE = '1.1';
 $SHORTDESCRIPTION = 'Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE';
 $NO_PREFS_IN_TOPIC = 1;
 
@@ -158,10 +158,13 @@ sub _getTemplateFromRules {
 
     return unless $rules;
 
+    # check full qualified topic name first
     foreach my $pattern (keys %$rules) {
-      if ("$web.$topic" =~ /^($pattern)$/ || $topic =~ /^($pattern)$/) {
-        return $rules->{$pattern};
-      }
+      return $rules->{$pattern} if "$web.$topic" =~ /^($pattern)$/;
+    }
+    # check topic name only
+    foreach my $pattern (keys %$rules) {
+      return $rules->{$pattern} if $topic =~ /^($pattern)$/;
     }
 
     return;

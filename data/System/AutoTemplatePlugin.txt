@@ -95,7 +95,8 @@ For both view and edit, a set of rules can be specified in =configure= where eac
 </verbatim>
 
 A topic's name will be matched against the regular expression in =&lt;pattern>= to decide on the template name
-to be used for the current template.
+to be used for the current template. A pattern can either cover the full qualified topic name (web.topic) or just
+the topic name. Rules are checked against the FQTN first.
 
 Examples:
 
@@ -103,13 +104,15 @@ Examples:
 $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{ViewTemplateRules} = {
   'WebTopicList' => 'WebTopicListView',
   'Tasks\.Item.*' => 'Tasks.ItemView',
+  'Item.*' => 'Applications.TaskApp.ItemView',
   'WebSearch.*' => 'KinoSearchView',
 };
 </verbatim>
 
-This will apply the <nop>WebTopicListView to the WebTopicList topic in all webs, the
-<nop>KinoSearchView to all WebSearch and WebSearchAdvanced topics in all webs and
-the <nop>Tasks.ItemView to all Item topics in the Tasks web. 
+This will apply the =<nop>WebTopicListViewTemplate= to the WebTopicList topic in all webs, the
+=<nop>KinoSearchViewTemplate= to all WebSearch and WebSearchAdvanced topics in all webs and
+the =<nop>Tasks.ItemViewTemplate= to all Item topics in the Tasks web. Other Item topics 
+will be displayed using the =<nop>Applications.TaskApp.ItemViewTemplate= 
 
 ---++ Configuration Settings
 
@@ -136,11 +139,12 @@ The following settings can be defined in configure
    * Set SHORTDESCRIPTION = Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE
 -->
 |  Plugin Author: | Foswiki:Main.MichaelDaum |
-|  Copyright: | &copy; 2008-2009, Oliver Kr&uuml;ger, Michael Daum |
+|  Copyright: | &copy; 2008-2010, Oliver Kr&uuml;ger, Michael Daum |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  12 Feb 2010: | fixed order rules are matched against the web.topic name |
 |  15 Dec 2009: | forked Foswiki:Extensions.AutoViewTemplatePlugin as rule-based feature was rejected. See Foswiki:Development.RulebasedViewTemplates |
 |  03 Nov 2009: | added rule-based strategy; made =mode= a priority list (MD) |
 |  06 Oct 2009: | Item2213: Plugin got better documentation. No change in behaviour. |
