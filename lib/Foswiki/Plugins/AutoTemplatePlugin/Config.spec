@@ -26,14 +26,17 @@ $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} = 'rules, exist';
 # <code>'pattern' => 'template'</code>. The current topic is matched against each of the
 # patterns in the given order. The first matching pattern determines the concrete view template.
 $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{ViewTemplateRules} = {
+  'ChangePassword' => 'ChangePasswordView',
   'UserRegistration' => 'UserRegistrationView',
   'WebAtom' => 'WebAtomView',
   'WebChanges' => 'WebChangesView',
+  'SiteChanges' => 'SiteChangesView',
   'WebCreateNewTopic' => 'WebCreateNewTopicView',
   'WebRss' => 'WebRssView',
   'WebSearchAdvanced' => 'WebSearchAdvancedView',
   'WebSearch' => 'WebSearchView',
   'WebTopicList' => 'WebTopicListView',
+  'WebIndex' => 'WebIndexView',
   'WikiGroups' => 'WikiGroupsView',
   'WikiUsers' => 'WikiUsersView',
 };
