@@ -12,24 +12,21 @@
 package Foswiki::Plugins::AutoTemplatePlugin;
 
 use strict;
-use vars qw( $VERSION $RELEASE $SHORTDESCRIPTION
-  $debug $isEditAction
-  $pluginName $NO_PREFS_IN_TOPIC 
-);
+use warnings;
 
-$VERSION = '$Rev: 5221 $';
-$RELEASE = '1.11';
-$SHORTDESCRIPTION = 'Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE';
-$NO_PREFS_IN_TOPIC = 1;
-
-$pluginName = 'AutoTemplatePlugin';
+our $VERSION = '$Rev: 5221 $';
+our $RELEASE = '2.00';
+our $SHORTDESCRIPTION = 'Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE';
+our $NO_PREFS_IN_TOPIC = 1;
+our $debug;
+our $isEditAction;
 
 sub initPlugin {
     my( $topic, $web, $user, $installWeb ) = @_;
 
     # check for Plugins.pm versions
     if( $Foswiki::Plugins::VERSION < 1.026 ) {
-        Foswiki::Func::writeWarning( "Version mismatch between $pluginName and Plugins.pm" );
+        Foswiki::Func::writeWarning( "Version mismatch between AutoTemplatePlugin and Plugins.pm" );
         return 0;
     }
 
@@ -75,7 +72,7 @@ sub initPlugin {
 
     # in edit mode, try to read the template to check if it exists
     if ($isEditAction && !Foswiki::Func::readTemplate($templateName)) {
-      Foswiki::Func::writeDebug("- ${pluginName}: edit tempalte not found") if $debug;
+      writeDebug("edit tempalte not found");
       return 1;
     }
 
@@ -83,12 +80,12 @@ sub initPlugin {
     if ($debug) {
       if ( $currentTemplate ) {
         if ( $override ) {
-          Foswiki::Func::writeDebug("- ${pluginName}: $templateVar already set, overriding with: $templateName");
+          writeDebug("$templateVar already set, overriding with: $templateName");
         } else {
-          Foswiki::Func::writeDebug("- ${pluginName}: $templateVar not changed/set.");
+          writeDebug("$templateVar not changed/set");
         }
       } else {
-        Foswiki::Func::writeDebug("- ${pluginName}: $templateVar set to: $templateName");
+        writeDebug("$templateVar set to: $templateName");
       }
     }
     if ($Foswiki::Plugins::VERSION >= 2.1 ) {
@@ -119,7 +116,7 @@ sub _getTemplateFromSectionInclude {
     my $formName = _getFormName($web, $topic);
     return unless $formName;
 
-    Foswiki::Func::writeDebug("- ${pluginName}: called _getTemplateFromSectionInclude($formName, $topic, $web)") if $debug;
+    writeDebug("called _getTemplateFromSectionInclude($formName, $topic, $web)");
 
     my ($formweb, $formtopic) = Foswiki::Func::normalizeWebTopicName($web, $formName);
 
@@ -138,7 +135,7 @@ sub _getTemplateFromTemplateExistence {
     my $formName = _getFormName($web, $topic);
     return unless $formName;
 
-    Foswiki::Func::writeDebug("- ${pluginName}: called _getTemplateFromTemplateExistence($formName, $topic, $web)") if $debug;
+    writeDebug("called _getTemplateFromTemplateExistence($formName, $topic, $web)");
     my ($templateWeb, $templateTopic) = Foswiki::Func::normalizeWebTopicName($web, $formName);
 
     $templateWeb =~ s/\//\./go;
@@ -152,22 +149,58 @@ sub _getTemplateFromTemplateExistence {
 sub _getTemplateFromRules {
     my ($web, $topic) = @_;
 
-    my $rules = $isEditAction?
+    writeDebug("called _getTemplateFromRules($web, $topic)");
+
+    # read template rules from preferences
+    my $rules = Foswiki::Func::getPreferencesValue(
+      $isEditAction?'EDIT_TEMPLATE_RULES':'VIEW_TEMPLATE_RULES');
+
+    if ($rules) {
+      $rules =~ s/^\s+//;
+      $rules =~ s/\s+$//;
+
+      # check full qualified topic name first
+      foreach my $rule (split(/\s*,\s*/, $rules)) {
+        if ($rule =~ /^(.*?)\s*=>\s*(.*?)$/) {
+          my $pattern = $1;
+          my $template = $2;
+          return $template if "$web.$topic" =~ /^($pattern)$/;
+        }
+      }
+      # check topic name only
+      foreach my $rule (split(/\s*,\s*/, $rules)) {
+        if ($rule =~ /^(.*?)\s*=>\s*(.*?)$/) {
+          my $pattern = $1;
+          my $template = $2;
+          return $template if $topic =~ /^($pattern)$/ ;
+        }
+      }
+    }
+
+    # read template rules from config
+    $rules = $isEditAction?
       $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{EditTemplateRules}:
       $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{ViewTemplateRules};
 
-    return unless $rules;
-
-    # check full qualified topic name first
-    foreach my $pattern (keys %$rules) {
-      return $rules->{$pattern} if "$web.$topic" =~ /^($pattern)$/;
-    }
-    # check topic name only
-    foreach my $pattern (keys %$rules) {
-      return $rules->{$pattern} if $topic =~ /^($pattern)$/;
+    if($rules) {
+      # check full qualified topic name first
+      foreach my $pattern (keys %$rules) {
+        return $rules->{$pattern} if "$web.$topic" =~ /^($pattern)$/;
+      }
+      # check topic name only
+      foreach my $pattern (keys %$rules) {
+        return $rules->{$pattern} if $topic =~ /^($pattern)$/;
+      }
     }
 
     return;
 }
+
+sub writeDebug {
+    return unless $debug;
+    #Foswiki::Func::writeDebug("- AutoTemplatePlugin - $_[0]");
+    print STDERR "- AutoTemplatePlugin - $_[0]\n";
+}
+
 
 1;
