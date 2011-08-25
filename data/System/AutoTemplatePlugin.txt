@@ -151,11 +151,12 @@ The following settings can be defined in configure
    * Set SHORTDESCRIPTION = Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE
 -->
 |  Plugin Author: | Foswiki:Main.MichaelDaum |
-|  Copyright: | &copy; 2008-2010, Oliver Kr&uuml;ger, Michael Daum |
+|  Copyright: | &copy; 2008-2011, Oliver Kr&uuml;ger, Michael Daum |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  25 Aug 2011: | added more default views for tools in the System web |
 |  05 Apr 2011: | added VIEW_TEMPLATE_RULES, EDIT_TEMPLATE_RULES preference variables | 
 |  09 Nov 2010: | added defaults to ease templating !ChangePassword, !SiteChanges, !WebIndex |
 |  12 Feb 2010: | fixed order rules are matched against the web.topic name |

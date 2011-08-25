@@ -27,6 +27,8 @@ $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} = 'rules, exist';
 # patterns in the given order. The first matching pattern determines the concrete view template.
 $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{ViewTemplateRules} = {
   'ChangePassword' => 'ChangePasswordView',
+  'ResetPassword' => 'ResetPasswordView',
+  'ChangeEmailAddress' => 'ChangeEmailAddressView',
   'UserRegistration' => 'UserRegistrationView',
   'WebAtom' => 'WebAtomView',
   'WebChanges' => 'WebChangesView',

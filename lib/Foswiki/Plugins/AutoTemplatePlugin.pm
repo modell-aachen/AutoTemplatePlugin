@@ -15,7 +15,7 @@ use strict;
 use warnings;
 
 our $VERSION = '$Rev: 5221 $';
-our $RELEASE = '2.00';
+our $RELEASE = '2.01';
 our $SHORTDESCRIPTION = 'Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE';
 our $NO_PREFS_IN_TOPIC = 1;
 our $debug;
