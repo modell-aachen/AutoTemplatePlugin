@@ -19,7 +19,7 @@ $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Override} = 0;
 # <li> 'rules': the template name is defined using the below rule sets in <code>ViewTemplateRules</code>
 #      and <code>EditTemplateRules</code> </li>
 # </ul>
-$Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} = 'rules, exist';
+$Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} = 'allforms, rules, exist';
 
 # **PERL**
 # Rule set used to derive the view template name. This is a list of rules of the form
