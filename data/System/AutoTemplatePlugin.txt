@@ -28,7 +28,7 @@ appropriately during view and edit.
 Another use case is to apply a VIEW_TEMPLATE to a set of topics whose name matches
 a given pattern rule.
 
-There are three base strategies on how the name of the template is derived:
+There are a few base strategies on how the name of the template is derived:
    1 =allforms=
    1 =exist= 
    1 =section=
@@ -53,7 +53,7 @@ If a topic has a form, look for the =ALL_FORMS_VIEW_TEMPLATE= and =ALL_FORMS_EDI
 Examples:
 <pre>
    &#42; Set ALL_FORMS_VIEW_TEMPLATE = MyWeb.MyViewTemplate
-   &#42; Set ALL_FORMS_EDIT_TEMPLATE = MyWeb.MEdittTemplate
+   &#42; Set ALL_FORMS_EDIT_TEMPLATE = MyWeb.MyEditTemplate
 </pre>
 
 ---+++ Mode "exist"
