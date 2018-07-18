@@ -106,7 +106,7 @@ sub initPlugin {
 sub _getFormName {
     my ($web, $topic) = @_;
 
-    return $formNameCache if defined $formNameCache && $formNameCache != -1;
+    return $formNameCache if defined $formNameCache && $formNameCache ne -1;
 
     my ( $meta, $text ) = Foswiki::Func::readTopic( $web, $topic );
 
