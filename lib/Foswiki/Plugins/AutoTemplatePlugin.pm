@@ -20,6 +20,7 @@ our $SHORTDESCRIPTION = 'Automatically sets VIEW_TEMPLATE and EDIT_TEMPLATE';
 our $NO_PREFS_IN_TOPIC = 1;
 our $debug;
 our $isEditAction;
+our $formNameCache;
 
 sub initPlugin {
     my( $topic, $web, $user, $installWeb ) = @_;
@@ -30,8 +31,10 @@ sub initPlugin {
         return 0;
     }
 
+    $formNameCache = -1;
+
     # get configuration
-    my $modeList = $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} || "rules, exist";
+    my $modeList = $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Mode} || "allforms, rules, exist";
     my $override = $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Override} || 0;
     $debug = $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Debug} || 0;
 
@@ -63,6 +66,8 @@ sub initPlugin {
         $templateName = _getTemplateFromTemplateExistence( $web, $topic );
       } elsif ( $mode eq "rules" ) {
         $templateName = _getTemplateFromRules( $web, $topic );
+      } elsif ( $mode eq "allforms" ) {
+        $templateName = _getTemplateFromAllForms( $web, $topic, $templateVar );
       }
       last if $templateName;
     }
@@ -101,12 +106,15 @@ sub initPlugin {
 sub _getFormName {
     my ($web, $topic) = @_;
 
+    return $formNameCache if defined $formNameCache && $formNameCache ne -1;
+
     my ( $meta, $text ) = Foswiki::Func::readTopic( $web, $topic );
 
     my $form;
     $form = $meta->get("FORM") if $meta;
     $form = $form->{"name"} if $form;
 
+    $formNameCache = $form;
     return $form;
 }
 
@@ -194,6 +202,17 @@ sub _getTemplateFromRules {
     }
 
     return;
+}
+
+sub _getTemplateFromAllForms {
+    my ($web, $topic, $templateVar) = @_;
+
+    writeDebug("called _getTemplateFromAllForms($web, $topic,$templateVar)");
+
+    my $formName = _getFormName($web, $topic);
+    return unless $formName;
+
+    return Foswiki::Func::getPreferencesValue("ALL_FORMS_$templateVar");
 }
 
 sub writeDebug {
