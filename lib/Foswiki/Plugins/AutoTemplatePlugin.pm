@@ -72,9 +72,9 @@ sub initPlugin {
       last if $templateName;
     }
 
-    # only set the view template if there is anything to set
     return 1 unless $templateName;
 
+    $templateName = _stripWeb($templateName);
     # in edit mode, try to read the template to check if it exists
     if ($isEditAction && !Foswiki::Func::readTemplate($templateName)) {
       writeDebug("edit tempalte not found");
@@ -215,11 +215,16 @@ sub _getTemplateFromAllForms {
     return Foswiki::Func::getPreferencesValue("ALL_FORMS_$templateVar");
 }
 
-sub writeDebug {
-    return unless $debug;
-    #Foswiki::Func::writeDebug("- AutoTemplatePlugin - $_[0]");
-    print STDERR "- AutoTemplatePlugin - $_[0]\n";
+sub _stripWeb {
+  my ($templateName) = @_;
+
+  my ($templateWeb, $templateTopic) = Foswiki::Func::normalizeWebTopicName(undef, $templateName);
+
+  return $templateTopic;
 }
 
+sub writeDebug {
+    Foswiki::Func::writeDebug("- AutoTemplatePlugin - $_[0]");
+}
 
 1;
