@@ -57,7 +57,6 @@ sub initPlugin {
       }
     }
 
-    # get it
     my $templateName = "";
     foreach my $mode (split(/\s*,\s*/, $modeList)) {
       if ( $mode eq "section" ) {
@@ -72,16 +71,17 @@ sub initPlugin {
       last if $templateName;
     }
 
-    # only set the view template if there is anything to set
     return 1 unless $templateName;
 
-    # in edit mode, try to read the template to check if it exists
+    if(!Foswiki::Func::readTemplate($templateName)){
+      $templateName = _stripWeb($templateName);
+    }
+
     if ($isEditAction && !Foswiki::Func::readTemplate($templateName)) {
       writeDebug("edit tempalte not found");
       return 1;
     }
 
-    # do it
     if ($debug) {
       if ( $currentTemplate ) {
         if ( $override ) {
@@ -93,11 +93,8 @@ sub initPlugin {
         writeDebug("$templateVar set to: $templateName");
       }
     }
-    if ($Foswiki::Plugins::VERSION >= 2.1 ) {
-      Foswiki::Func::setPreferencesValue($templateVar, $templateName);
-    } else {
-      $Foswiki::Plugins::SESSION->{prefs}->pushPreferenceValues( 'SESSION', { $templateVar => $templateName } );
-    }
+
+    Foswiki::Func::setPreferencesValue($templateVar, $templateName);
 
     # Plugin correctly initialized
     return 1;
@@ -215,11 +212,16 @@ sub _getTemplateFromAllForms {
     return Foswiki::Func::getPreferencesValue("ALL_FORMS_$templateVar");
 }
 
-sub writeDebug {
-    return unless $debug;
-    #Foswiki::Func::writeDebug("- AutoTemplatePlugin - $_[0]");
-    print STDERR "- AutoTemplatePlugin - $_[0]\n";
+sub _stripWeb {
+  my ($templateName) = @_;
+
+  my ($templateWeb, $templateTopic) = Foswiki::Func::normalizeWebTopicName(undef, $templateName);
+
+  return $templateTopic;
 }
 
+sub writeDebug {
+    Foswiki::Func::writeDebug("- AutoTemplatePlugin - $_[0]");
+}
 
 1;

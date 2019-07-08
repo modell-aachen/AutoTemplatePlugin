@@ -11,7 +11,7 @@ $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Debug} = 0;
 $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{Override} = 0;
 
 # **STRING**
-# Comma separated list of modes defining how to find the view or edit template. 
+# Comma separated list of modes defining how to find the view or edit template.
 # The following modes can be combined:
 # <ul>
 # <li> 'exist': the template name is derived from the name of the form definition topic. </li>
@@ -36,7 +36,7 @@ $Foswiki::cfg{Plugins}{AutoTemplatePlugin}{ViewTemplateRules} = {
   'WebCreateNewTopic' => 'WebCreateNewTopicView',
   'WebRss' => 'WebRssView',
   'WebSearchAdvanced' => 'WebSearchAdvancedView',
-  'WebSearch' => 'WebSearchView',
+  'WebSearch' => 'SolrSearchView',
   'WebTopicList' => 'WebTopicListView',
   'WebIndex' => 'WebIndexView',
   'WikiGroups' => 'WikiGroupsView',
